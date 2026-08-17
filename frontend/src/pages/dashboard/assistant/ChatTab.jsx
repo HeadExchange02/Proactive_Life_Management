@@ -23,10 +23,12 @@ export default function ChatTab() {
   ])
   const [input, setInput] = useState('')
   const [isSending, setIsSending] = useState(false)
+  const [error, setError] = useState('')
   const autoSentRef = useRef(false)
 
   const send = async (text) => {
     if (!text.trim() || isSending) return
+    setError('')
     const userMessage = { role: 'user', content: text }
     setMessages((prev) => [...prev, userMessage])
     setInput('')
@@ -37,8 +39,11 @@ export default function ChatTab() {
         ...prev,
         { role: 'assistant', content: data.reply, route: data.route, intent: data.intent },
       ])
-    } catch {
-      setMessages((prev) => [...prev, { role: 'assistant', content: 'Sorry, something went wrong.' }])
+    } catch (requestError) {
+      const message =
+        requestError.response?.data?.message ||
+        'The assistant could not respond right now. Please try again.'
+      setError(message)
     } finally {
       setIsSending(false)
     }
@@ -86,6 +91,17 @@ export default function ChatTab() {
         ))}
         {isSending && <div className="self-start text-xs text-[var(--color-text-muted)]">Thinking...</div>}
       </div>
+      {error && (
+        <div
+          role="alert"
+          className="mb-3 flex items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+        >
+          <span>{error}</span>
+          <button type="button" onClick={() => setError('')} className="font-semibold hover:underline">
+            Dismiss
+          </button>
+        </div>
+      )}
       <form onSubmit={sendMessage} className="flex gap-2">
         <input
           value={input}

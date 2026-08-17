@@ -1,4 +1,6 @@
 import 'dotenv/config'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 export const env = {
   nodeEnv: process.env.NODE_ENV || 'development',
@@ -22,9 +24,10 @@ export const env = {
   },
 
   ai: {
-    provider: process.env.AI_PROVIDER || 'openai', // openai | claude | gemini
+    provider: process.env.AI_PROVIDER || 'Gemini', // OpenAI | Claude | Gemini
     openaiKey: process.env.OPENAI_API_KEY,
     claudeKey: process.env.ANTHROPIC_API_KEY,
     geminiKey: process.env.GEMINI_API_KEY,
+    geminiModel: process.env.GEMINI_MODEL || 'gemini-3-flash-preview',
   },
 }
