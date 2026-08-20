@@ -71,11 +71,10 @@ export default function ChatTab() {
         {messages.map((m, i) => (
           <div key={i} className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
             <div
-              className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-sm ${
-                m.role === 'user'
+              className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-sm ${m.role === 'user'
                   ? 'bg-[var(--color-primary)] text-white'
                   : 'bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)]'
-              }`}
+                }`}
             >
               {m.content}
             </div>

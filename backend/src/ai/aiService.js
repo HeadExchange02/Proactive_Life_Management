@@ -2,11 +2,15 @@ import { env } from '../config/env.js'
 import { openaiProvider } from './providers/openaiProvider.js'
 import { claudeProvider } from './providers/claudeProvider.js'
 import { geminiProvider } from './providers/geminiProvider.js'
+import { groqProvider } from './providers/groqProvider.js'
+import { mistralProvider } from './providers/mistralProvider.js'
 
 const providers = {
   openai: openaiProvider,
   claude: claudeProvider,
   gemini: geminiProvider,
+  groq: groqProvider,
+  mistral: mistralProvider,
 }
 
 /**

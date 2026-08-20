@@ -1,4 +1,4 @@
-import { Stethoscope, Plus } from 'lucide-react'
+import { Stethoscope, Plus, AlertCircle } from 'lucide-react'
 import AIModuleForm from '../../components/dashboard/AIModuleForm'
 import { useAIRecommendation } from '../../hooks/useAIRecommendation'
 
@@ -54,14 +54,56 @@ export default function HealthcarePage() {
           submitLabel="Get Guidance"
           accentColor={ACCENT}
         />
+        
         {error && <p className="mt-4 text-sm text-[var(--color-error)]">{error}</p>}
         {isLoading && <p className="mt-4 text-sm text-[var(--color-text-muted)]">Reviewing your symptoms...</p>}
-        {result?.hospitals?.map((h) => (
-          <div key={h.name} className="card p-5 mt-4 border-l-4" style={{ borderColor: ACCENT }}>
+        
+        {/* Hospitals / AI Result Section */}
+        {result?.aiAnalysis?.hospitals?.map((h, idx) => (
+          <div key={idx} className="card p-5 mt-4 border-l-4" style={{ borderColor: ACCENT }}>
             <h3 className="font-bold">{h.name}</h3>
             <p className="text-sm text-[var(--color-text-secondary)]">{h.address}</p>
           </div>
         ))}
+
+        {/* Medicines Data Section with Dosages */}
+        {result?.medicines?.length > 0 && (
+          <div className="mt-8">
+            <h3 className="text-xl font-bold mb-4" style={{ color: ACCENT }}>Suggested Medicines</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {result.medicines.map((med, idx) => (
+                <div key={idx} className="card p-4 border rounded-xl shadow-sm bg-white hover:shadow-md transition-shadow">
+                  <h4 className="font-bold text-lg text-gray-800">
+                    {med.name} <span className="text-sm font-normal text-gray-500">({med.strength})</span>
+                  </h4>
+                  <p className="text-sm text-gray-600 mt-2"><strong>Indication:</strong> {med.indication}</p>
+                  
+                  {/* Dosage Section */}
+                  <div className="mt-3 p-3 bg-gray-50 rounded-lg text-sm border border-gray-100">
+                    <p className="text-gray-700"><strong>Standard Dose:</strong> {med.standardDosage || 'N/A'}</p>
+                    {med.mildDosage && <p className="text-gray-600 mt-1"><strong>Mild:</strong> {med.mildDosage}</p>}
+                    {med.severeDosage && <p className="text-[#C94A4A] mt-1"><strong>Severe:</strong> {med.severeDosage}</p>}
+                  </div>
+
+                  <p className="text-xs text-gray-400 mt-3">{med.company}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Medical Disclaimer Note */}
+            <div className="mt-8 p-4 bg-[#F9FAFB] border-l-4 border-[#C94A4A] rounded-r-lg flex items-start gap-3">
+              <AlertCircle className="text-[#C94A4A] shrink-0 mt-0.5" size={20} />
+              <div>
+                <h4 className="font-bold text-gray-800 text-sm">Medical Disclaimer</h4>
+                <p className="text-sm text-gray-600 mt-1 leading-relaxed">
+                  These suggestions are provided for temporary relief and general guidance only. For an accurate diagnosis and proper treatment, please consult a certified healthcare professional or visit a nearby hospital.
+                </p>
+              </div>
+            </div>
+
+          </div>
+        )}
+
       </div>
     </div>
   )

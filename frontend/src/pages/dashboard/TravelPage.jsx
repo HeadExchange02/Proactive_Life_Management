@@ -1,5 +1,6 @@
-import { Plane, MapPin } from 'lucide-react'
+import { Plane, MapPin, Lightbulb } from 'lucide-react'
 import AIModuleForm from '../../components/dashboard/AIModuleForm'
+import BudgetOverviewCard from '../../components/dashboard/BudgetOverviewCard'
 import { useAIRecommendation } from '../../hooks/useAIRecommendation'
 
 const fields = [
@@ -67,12 +68,28 @@ export default function TravelPage() {
         <AIModuleForm fields={fields} onSubmit={requestRecommendation} accentColor={ACCENT} />
         {error && <p className="mt-4 text-sm text-[var(--color-error)]">{error}</p>}
         {isLoading && <p className="mt-4 text-sm text-[var(--color-text-muted)]">Planning your trip...</p>}
-        {result?.itinerary?.map((stop, i) => (
-          <div key={i} className="card p-5 mt-4 border-l-4" style={{ borderColor: ACCENT }}>
-            <h3 className="font-bold">{stop.name}</h3>
-            <p className="text-sm text-[var(--color-text-secondary)]">{stop.notes}</p>
-          </div>
-        ))}
+
+        {result?.itinerary?.map((stop, i) => {
+          if (stop.type === 'budget') {
+            return <BudgetOverviewCard key={i} title={stop.name} data={stop.data} accentColor={ACCENT} />
+          }
+
+          if (stop.type === 'preference') {
+            return (
+              <div key={i} className="flex items-start gap-2 mt-4 px-4 py-3 rounded-lg bg-[var(--color-bg-secondary)] border border-dashed border-slate-300">
+                <Lightbulb size={16} className="text-[#C96A3C] shrink-0 mt-0.5" />
+                <p className="text-xs text-[var(--color-text-secondary)]">{stop.notes}</p>
+              </div>
+            )
+          }
+
+          return (
+            <div key={i} className="card p-5 mt-4 border-l-4" style={{ borderColor: ACCENT }}>
+              <h3 className="font-bold">{stop.name}</h3>
+              <p className="text-sm text-[var(--color-text-secondary)] whitespace-pre-line">{stop.notes}</p>
+            </div>
+          )
+        })}
       </div>
     </div>
   )

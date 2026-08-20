@@ -28,6 +28,4 @@ server.on('close', () => {
 
 // TEMPORARY diagnostic heartbeat — if this alone keeps the process alive,
 // it proves the http.Server handle itself was not keeping Node running.
-setInterval(() => {
-  logger.debug('heartbeat')
-}, 5000)
+//setInterval(() => {logger.debug('heartbeat')}, 5000)

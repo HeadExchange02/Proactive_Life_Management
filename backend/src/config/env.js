@@ -23,11 +23,14 @@ export const env = {
     from: process.env.SMTP_FROM || 'no-reply@proactivelife.app',
   },
 
-  ai: {
-    provider: process.env.AI_PROVIDER || 'Gemini', // OpenAI | Claude | Gemini
+    ai: {
+    provider: process.env.AI_PROVIDER || 'groq, gemini', // openai | claude | gemini | groq | mistral
     openaiKey: process.env.OPENAI_API_KEY,
     claudeKey: process.env.ANTHROPIC_API_KEY,
     geminiKey: process.env.GEMINI_API_KEY,
     geminiModel: process.env.GEMINI_MODEL || 'gemini-3-flash-preview',
+    groqKey: process.env.GROQ_API_KEY,       
+    groqModel: process.env.GROQ_MODEL || 'openai/gpt-oss-120b',       
+    mistralKey: process.env.MISTRAL_API_KEY, 
   },
 }
