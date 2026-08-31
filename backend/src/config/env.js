@@ -24,7 +24,7 @@ export const env = {
   },
 
     ai: {
-    provider: process.env.AI_PROVIDER || 'groq, gemini', // openai | claude | gemini | groq | mistral
+    provider: process.env.AI_PROVIDER || 'gemini', // openai | claude | gemini | groq | mistral
     openaiKey: process.env.OPENAI_API_KEY,
     claudeKey: process.env.ANTHROPIC_API_KEY,
     geminiKey: process.env.GEMINI_API_KEY,

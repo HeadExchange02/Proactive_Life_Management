@@ -2,7 +2,8 @@ import { env } from '../../config/env.js'
 
 export const claudeProvider = {
   name: 'claude',
-  async complete({ system, prompt }) {
+  defaultModel: 'claude-sonnet-4-6',
+  async complete({ system, prompt, model }) {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -11,7 +12,7 @@ export const claudeProvider = {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
+        model: model || 'claude-sonnet-4-6',
         max_tokens: 1024,
         system,
         messages: [{ role: 'user', content: prompt }],

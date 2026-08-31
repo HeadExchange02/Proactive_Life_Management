@@ -11,6 +11,7 @@ import { env } from './config/env.js'
 import { logger } from './config/logger.js'
 import routes from './routes/index.js'
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js'
+import { aiContextMiddleware } from './middleware/aiContext.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -20,6 +21,7 @@ app.use(helmet())
 app.use(cors({ origin: env.clientUrl, credentials: true }))
 app.use(express.json())
 app.use(cookieParser())
+app.use(aiContextMiddleware)
 app.use(pinoHttp({ logger }))
 
 // Generous global limit; tighten per-route (e.g. /auth/login) as needed.

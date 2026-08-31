@@ -2,13 +2,14 @@ import { env } from '../../config/env.js'
 
 export const geminiProvider = {
   name: 'gemini',
-  async complete({ system, prompt }) {
+  defaultModel: env.ai.geminiModel,
+  async complete({ system, prompt, model }) {
     if (!env.ai.geminiKey) {
       throw new Error('Gemini is selected but GEMINI_API_KEY is not configured')
     }
 
     const url = new URL(
-      `https://generativelanguage.googleapis.com/v1beta/models/${env.ai.geminiModel}:generateContent`
+      `https://generativelanguage.googleapis.com/v1beta/models/${model || env.ai.geminiModel}:generateContent`
     )
     url.searchParams.set('key', env.ai.geminiKey)
 

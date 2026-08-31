@@ -16,6 +16,7 @@ import profileRoutes from './profileRoutes.js'
 import adminRoutes from './adminRoutes.js'
 import dashboardRoutes from './dashboardRoutes.js'
 import bdServiceRoutes from './bdServiceRoutes.js'
+import aiMetaRoutes from './aiMetaRoutes.js'
 
 const router = Router()
 
@@ -28,6 +29,7 @@ router.use('/agriculture', agricultureRoutes)
 router.use('/budget', budgetRoutes)
 router.use('/bd-services', bdServiceRoutes)
 router.use('/assistant', assistantRoutes)
+router.use('/ai', aiMetaRoutes)
 router.use('/notifications', notificationRoutes)
 router.use('/goals', goalRoutes)
 router.use('/tasks', taskRoutes)

@@ -4,6 +4,7 @@ import { claudeProvider } from './providers/claudeProvider.js'
 import { geminiProvider } from './providers/geminiProvider.js'
 import { groqProvider } from './providers/groqProvider.js'
 import { mistralProvider } from './providers/mistralProvider.js'
+import { getAIContext } from '../middleware/aiContext.js'
 
 const providers = {
   openai: openaiProvider,
@@ -34,10 +35,13 @@ function stripMarkdownFence(raw) {
 
 
 export const aiService = {
-  async complete({ system, prompt }, providerName = env.ai.provider) {
-    const provider = providers[providerName]
-    if (!provider) throw new Error(`Unknown AI provider: ${providerName}`)
-    return provider.complete({ system, prompt })
+  async complete({ system, prompt }, providerName, model) {
+    const context = getAIContext()
+    const resolvedProviderName = providerName || context.provider || env.ai.provider
+    const provider = providers[resolvedProviderName]
+    if (!provider) throw new Error(`Unknown AI provider: ${resolvedProviderName}`)
+    const resolvedModel = model || (providerName ? undefined : context.model)
+    return provider.complete({ system, prompt, model: resolvedModel })
   },
 
   /**
@@ -45,10 +49,11 @@ export const aiService = {
    * model to return JSON only, then parses it — used by career/travel/
    * healthcare/agriculture/budget modules.
    */
-  async completeJSON(system, prompt, providerName) {
+  async completeJSON(system, prompt, providerName, model) {
     const raw = await this.complete(
       { system: `${system}\nRespond with ONLY valid JSON, no markdown fences, no prose.`, prompt },
-      providerName
+      providerName,
+      model
     )
     const cleaned = stripMarkdownFence(raw)
     try {

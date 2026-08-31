@@ -4,6 +4,7 @@ import * as Icons from 'lucide-react'
 import { Menu, X, LogOut, ShieldCheck } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 import { navbarPrimaryItems, navbarMenuItems } from '../../constants/content'
+import ModelSelector from '../ModelSelector'
 
 export default function Navbar() {
   const { user, logout } = useAuth()
@@ -49,6 +50,7 @@ export default function Navbar() {
 
           {/* User menu */}
           <div className="hidden lg:flex items-center gap-3 shrink-0 relative">
+            <ModelSelector />
             <button
               onClick={() => setMenuOpen((v) => !v)}
               className="flex items-center gap-2 pl-2 pr-3 h-10 rounded-full bg-[var(--color-bg-secondary)] hover:bg-[var(--color-border-light)] transition border border-[var(--color-border-light)]"
@@ -109,14 +111,17 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Mobile menu button */}
-          <button
-            className="lg:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-[var(--color-bg-secondary)]"
-            onClick={() => setMobileOpen((v) => !v)}
-            aria-label="Menu"
-          >
-            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+          {/* Mobile: model selector + menu button */}
+          <div className="lg:hidden flex items-center gap-2">
+            <ModelSelector />
+            <button
+              className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-[var(--color-bg-secondary)]"
+              onClick={() => setMobileOpen((v) => !v)}
+              aria-label="Menu"
+            >
+              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile nav */}

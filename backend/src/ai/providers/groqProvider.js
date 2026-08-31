@@ -4,7 +4,8 @@ import { env } from '../../config/env.js'
 // matches openaiProvider.js exactly — only the base URL, key, and model differ.
 export const groqProvider = {
   name: 'groq',
-  async complete({ system, prompt }) {
+  defaultModel: env.ai.groqModel,
+  async complete({ system, prompt, model }) {
     if (!env.ai.groqKey) {
       throw new Error('Groq is selected but Groq_API_KEY is not configured')
     }
@@ -16,7 +17,7 @@ export const groqProvider = {
         Authorization: `Bearer ${env.ai.groqKey}`,
       },
       body: JSON.stringify({
-        model: 'openai/gpt-oss-120b',
+        model: model || env.ai.groqModel,
         messages: [
           { role: 'system', content: system },
           { role: 'user', content: prompt },

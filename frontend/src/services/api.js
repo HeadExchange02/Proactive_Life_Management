@@ -12,6 +12,17 @@ api.interceptors.request.use((config) => {
   return config
 })
 
+// Attach the user's selected AI provider/model (set via the model selector
+// in the navbar) so every AI-backed endpoint uses it, without each page
+// needing to pass it explicitly.
+api.interceptors.request.use((config) => {
+  const provider = localStorage.getItem('aiProvider')
+  const model = localStorage.getItem('aiModel')
+  if (provider) config.headers['X-AI-Provider'] = provider
+  if (model) config.headers['X-AI-Model'] = model
+  return config
+})
+
 // On 401, try a silent refresh once, then log out if that fails too
 let isRefreshing = false
 

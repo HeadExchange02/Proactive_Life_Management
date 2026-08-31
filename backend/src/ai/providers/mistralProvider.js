@@ -3,7 +3,8 @@ import { env } from '../../config/env.js'
 // Also OpenAI-compatible — same shape again.
 export const mistralProvider = {
   name: 'mistral',
-  async complete({ system, prompt }) {
+  defaultModel: 'mistral-small-latest',
+  async complete({ system, prompt, model }) {
     const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -11,7 +12,7 @@ export const mistralProvider = {
         Authorization: `Bearer ${env.ai.mistralKey}`,
       },
       body: JSON.stringify({
-        model: 'mistral-small-latest',
+        model: model || 'mistral-small-latest',
         messages: [
           { role: 'system', content: system },
           { role: 'user', content: prompt },

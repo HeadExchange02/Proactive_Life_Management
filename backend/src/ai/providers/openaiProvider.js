@@ -4,7 +4,8 @@ import { env } from '../../config/env.js'
 // so the rest of the app never needs to know which AI vendor is active.
 export const openaiProvider = {
   name: 'openai',
-  async complete({ system, prompt }) {
+  defaultModel: 'gpt-4o-mini',
+  async complete({ system, prompt, model }) {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -12,7 +13,7 @@ export const openaiProvider = {
         Authorization: `Bearer ${env.ai.openaiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: model || 'gpt-4o-mini',
         messages: [
           { role: 'system', content: system },
           { role: 'user', content: prompt },
