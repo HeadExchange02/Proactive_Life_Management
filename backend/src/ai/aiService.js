@@ -14,10 +14,25 @@ const providers = {
 }
 
 /**
+ * Strips ```json / ``` fences and surrounding prose that providers
+ * (especially Gemini) sometimes wrap around JSON output despite being
+ * told not to. Falls back to the trimmed raw string if no fence is found,
+ * so a clean JSON response still parses normally.
+ */
+function stripMarkdownFence(raw) {
+  const trimmed = raw.trim()
+  const fenceMatch = trimmed.match(/```(?:json)?\s*([\s\S]*?)\s*```/i)
+  if (fenceMatch) return fenceMatch[1].trim()
+  return trimmed
+}
+
+/**
  * Single entry point the rest of the backend uses for AI calls.
  * Swap providers globally via AI_PROVIDER in .env, or per-call via
  * `providerName`, without any calling code changing.
  */
+
+
 export const aiService = {
   async complete({ system, prompt }, providerName = env.ai.provider) {
     const provider = providers[providerName]
@@ -35,8 +50,9 @@ export const aiService = {
       { system: `${system}\nRespond with ONLY valid JSON, no markdown fences, no prose.`, prompt },
       providerName
     )
+    const cleaned = stripMarkdownFence(raw)
     try {
-      return JSON.parse(raw)
+      return JSON.parse(cleaned)
     } catch {
       throw new Error('AI provider returned non-JSON output')
     }
