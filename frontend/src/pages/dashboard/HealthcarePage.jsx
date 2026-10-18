@@ -59,10 +59,28 @@ export default function HealthcarePage() {
         {isLoading && <p className="mt-4 text-sm text-[var(--color-text-muted)]">Reviewing your symptoms...</p>}
         
         {/* Hospitals / AI Result Section */}
+        {result?.aiAnalysis?.specialty && (
+          <p className="mt-6 text-sm font-semibold" style={{ color: ACCENT }}>
+            Specialist care for: {result.aiAnalysis.specialty.label}
+            {result.aiAnalysis.recommendedSpecialists?.length > 0 &&
+              ` — see a ${result.aiAnalysis.recommendedSpecialists.join(' / ')}`}
+          </p>
+        )}
         {result?.aiAnalysis?.hospitals?.map((h, idx) => (
           <div key={idx} className="card p-5 mt-4 border-l-4" style={{ borderColor: ACCENT }}>
-            <h3 className="font-bold">{h.name}</h3>
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="font-bold">{h.name}</h3>
+              {h.curated && idx === 0 && (
+                <span
+                  className="text-[11px] font-bold px-2 py-0.5 rounded-full text-white"
+                  style={{ background: ACCENT }}
+                >
+                  Top choice
+                </span>
+              )}
+            </div>
             <p className="text-sm text-[var(--color-text-secondary)]">{h.address}</p>
+            {h.note && <p className="text-xs mt-1 text-[var(--color-text-muted)]">{h.note}</p>}
           </div>
         ))}
 
@@ -72,11 +90,11 @@ export default function HealthcarePage() {
             <h3 className="text-xl font-bold mb-4" style={{ color: ACCENT }}>Suggested Medicines</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {result.medicines.map((med, idx) => (
-                <div key={idx} className="card p-4 border rounded-xl shadow-sm bg-white hover:shadow-md transition-shadow">
-                  <h4 className="font-bold text-lg text-gray-800">
-                    {med.name} <span className="text-sm font-normal text-gray-500">({med.strength})</span>
+                <div key={idx} className="card p-4 border border-[var(--color-border-default)] rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                  <h4 className="font-bold text-lg text-[var(--color-text-primary)]">
+                    {med.name} <span className="text-sm font-normal text-[var(--color-text-secondary)]">({med.strength})</span>
                   </h4>
-                  <p className="text-sm text-gray-600 mt-2"><strong>Indication:</strong> {med.indication}</p>
+                  <p className="text-sm text-[var(--color-text-secondary)] mt-2"><strong>Indication:</strong> {med.indication}</p>
                   
                   {/* Dosage Section */}
                   <div className="mt-3 p-3 bg-gray-50 rounded-lg text-sm border border-gray-100">
@@ -85,7 +103,7 @@ export default function HealthcarePage() {
                     {med.severeDosage && <p className="text-[#C94A4A] mt-1"><strong>Severe:</strong> {med.severeDosage}</p>}
                   </div>
 
-                  <p className="text-xs text-gray-400 mt-3">{med.company}</p>
+                  <p className="text-xs text-[var(--color-text-muted)] mt-3">{med.company}</p>
                 </div>
               ))}
             </div>
