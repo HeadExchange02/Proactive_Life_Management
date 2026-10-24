@@ -142,4 +142,3 @@ I created this initial README from code and example env files. To finish and tai
 6. Would you like CI (GitHub Actions) or Docker instructions added to the README? If so, provide any constraints (registry, base images).
 
 ---
-If you want I can commit this README to the repository now and then update it with your answers (license, author, screenshots).
