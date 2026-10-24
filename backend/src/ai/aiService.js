@@ -4,6 +4,7 @@ import { claudeProvider } from './providers/claudeProvider.js'
 import { geminiProvider } from './providers/geminiProvider.js'
 import { groqProvider } from './providers/groqProvider.js'
 import { mistralProvider } from './providers/mistralProvider.js'
+import { bluesmindsProvider } from './providers/bluesmindsProvider.js'
 import { getAIContext } from '../middleware/aiContext.js'
 
 const providers = {
@@ -12,6 +13,7 @@ const providers = {
   gemini: geminiProvider,
   groq: groqProvider,
   mistral: mistralProvider,
+  bluesminds: bluesmindsProvider,
 }
 
 /**

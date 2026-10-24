@@ -57,9 +57,22 @@ export function AIProviderProvider({ children }) {
     localStorage.setItem('aiModel', model)
   }, [])
 
+  // Get models for currently selected provider
+  const currentProvider = providers.find((p) => p.id === selectedProvider)
+  const availableModels = currentProvider?.models || []
+
   return (
     <AIProviderContext.Provider
-      value={{ providers, selectedProvider, selectedModel, loading, selectProvider, selectModel }}
+      value={{
+        providers,
+        selectedProvider,
+        selectedModel,
+        loading,
+        selectProvider,
+        selectModel,
+        availableModels,
+        currentProvider,
+      }}
     >
       {children}
     </AIProviderContext.Provider>
