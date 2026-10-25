@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Cpu, ChevronDown, ChevronRight, Check } from 'lucide-react'
+import { Cpu, ChevronDown, Check } from 'lucide-react'
 import { useAIProvider } from '../contexts/AIProviderContext'
 
 export default function ModelSelector() {

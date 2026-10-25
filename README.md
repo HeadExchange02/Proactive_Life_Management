@@ -27,7 +27,7 @@ Table of contents
 - Rate-limiting, helmet security headers, and structured logging with pino
 
 ## Tech stack
-- Language: JavaScript (primary), small TypeScript usage in Prisma seed
+- Language: JavaScript (ES modules)
 - Frontend: React + Vite
 - Backend: Node.js (ES modules) + Express-compatible handlers
 - Database: PostgreSQL (works with Supabase connection string)
@@ -97,7 +97,8 @@ Backend (backend/.env)
 - PORT=4000
 - CLIENT_URL=http://localhost:5173
 - DATABASE_URL="postgresql://user:password@localhost:5432/pce_dev"
-- JWT_ACCESS_SECRET, JWT_REFRESH_SECRET (generate strong random secrets)
+- JWT_ACCESS_SECRET, JWT_REFRESH_SECRET (required; generate strong random secrets of at least 32 characters in production)
+- REQUIRE_EMAIL_VERIFICATION (defaults to true in production and false otherwise; when true, SMTP must be configured so users receive verification links)
 - GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET (for Google OAuth)
 - SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM (SMTP for emails; leave blank to log emails in dev)
 - AI_PROVIDER (openai | claude | gemini | mistral | groq)
@@ -112,7 +113,11 @@ Frontend (frontend/.env)
 - Only the key for the selected provider is required; the repo contains adapters for OpenAI, Anthropic/Claude, Google Gemini, Mistral, and Groq.
 
 ## Running tests
-There are no automated tests configured in package.json at the moment. See TESTING.md for notes.
+Backend unit tests use the built-in Node test runner:
+```bash
+npm --prefix backend test
+```
+Coverage is currently limited to environment validation. See TESTING.md for notes on extending it.
 
 ## Deployment
 See DEPLOYMENT.md in the repo root for platform-specific deployment guidance. Common steps:

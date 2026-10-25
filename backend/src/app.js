@@ -24,8 +24,26 @@ app.use(cookieParser())
 app.use(aiContextMiddleware)
 app.use(pinoHttp({ logger }))
 
-// Generous global limit; tighten per-route (e.g. /auth/login) as needed.
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 300 }))
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: 'Too many attempts. Please try again later.' },
+})
+app.use(
+  [
+    '/api/auth/login',
+    '/api/auth/signup',
+    '/api/auth/google',
+    '/api/auth/forgot-password',
+    '/api/auth/reset-password',
+    '/api/auth/verify-email',
+  ],
+  authLimiter,
+)
 
 app.use('/api', routes)
 

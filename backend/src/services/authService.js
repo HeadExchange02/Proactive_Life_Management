@@ -5,6 +5,7 @@ import { userRepository } from '../repositories/userRepository.js'
 import { signAccessToken, signRefreshToken, verifyRefreshToken } from '../utils/jwt.js'
 import { ApiError } from '../utils/ApiError.js'
 import { env } from '../config/env.js'
+import { logger } from '../config/logger.js'
 import { emailService } from './emailService.js'
 
 const googleClient = new OAuth2Client(env.googleClientId)
@@ -34,16 +35,14 @@ export const authService = {
       email,
       passwordHash,
       emailVerifyToken,
-      isEmailVerified: true, // TODO: remove this once real email delivery is confirmed working
+      isEmailVerified: !env.requireEmailVerification,
       settings: { create: {} },
     })
 
     try {
       await emailService.sendVerificationEmail(user, emailVerifyToken)
     } catch (err) {
-      // Don't fail signup just because the email provider rejected the send
-      // (e.g. Resend test-mode restrictions). Account is already usable.
-      console.error('Verification email failed to send:', err.message)
+      logger.error({ err }, 'Verification email failed to send')
     }
     return { message: 'Account created. Please check your email to verify your account.' }
   },
@@ -66,7 +65,9 @@ export const authService = {
   async loginWithGoogle(idToken) {
     const ticket = await googleClient.verifyIdToken({ idToken, audience: env.googleClientId })
     const payload = ticket.getPayload()
-    if (!payload?.email) throw new ApiError(401, 'Invalid Google token')
+    if (!payload?.email || payload.email_verified !== true) {
+      throw new ApiError(401, 'Invalid Google token')
+    }
 
     let user = await userRepository.findByGoogleId(payload.sub)
     if (!user) {

@@ -4,6 +4,7 @@ import { hospitalRepository } from '../repositories/hospitalRepository.js'
 
 import { prisma } from '../config/prisma.js'
 import { env } from '../config/env.js'
+import { logger } from '../config/logger.js'
 import { findSpecialty, SPECIALTIES } from '../data/specialtyHospitals.js'
 
 const SYSTEM_PROMPT = `You are a healthcare guidance assistant for Bangladesh. You do NOT diagnose. 
@@ -36,11 +37,11 @@ export const healthcareService = {
         )
         aiResult = parsed && typeof parsed === 'object' ? parsed : dummyData
       } catch (error) {
-        console.log("AI API Error or Invalid Key. Using dummy data...");
+        logger.warn({ err: error }, 'AI request failed; using fallback healthcare data')
         aiResult = dummyData;
       }
     } else {
-      console.log("No API Key found. Skipping AI and using fast dummy data.");
+      logger.info('No AI provider key configured; using fallback healthcare data')
       aiResult = dummyData;
     }
 

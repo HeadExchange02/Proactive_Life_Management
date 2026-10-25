@@ -23,30 +23,41 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-// On 401, try a silent refresh once, then log out if that fails too
-let isRefreshing = false
+let refreshPromise = null
+
+function refreshAccessToken() {
+  refreshPromise ??= axios
+    .post('/api/auth/refresh', {}, { withCredentials: true })
+    .then(({ data }) => {
+      localStorage.setItem('accessToken', data.accessToken)
+      return data.accessToken
+    })
+    .finally(() => {
+      refreshPromise = null
+    })
+  return refreshPromise
+}
 
 api.interceptors.response.use(
   (res) => res,
   async (error) => {
     const original = error.config
-    if (error.response?.status === 401 && !original._retry && !isRefreshing) {
-      original._retry = true
-      isRefreshing = true
-      try {
-        const { data } = await axios.post('/api/auth/refresh', {}, { withCredentials: true })
-        localStorage.setItem('accessToken', data.accessToken)
-        isRefreshing = false
-        original.headers.Authorization = `Bearer ${data.accessToken}`
-        return api(original)
-      } catch (refreshError) {
-        isRefreshing = false
-        localStorage.removeItem('accessToken')
-        window.location.href = '/login'
-        return Promise.reject(refreshError)
-      }
+    const isUnauthorized = error.response?.status === 401
+    const isAuthRequest = original?.url?.startsWith('/auth/')
+    if (!isUnauthorized || !original || original._retry || isAuthRequest) {
+      return Promise.reject(error)
     }
-    return Promise.reject(error)
+
+    original._retry = true
+    try {
+      const accessToken = await refreshAccessToken()
+      original.headers.Authorization = `Bearer ${accessToken}`
+      return api(original)
+    } catch (refreshError) {
+      localStorage.removeItem('accessToken')
+      window.location.href = '/login'
+      return Promise.reject(refreshError)
+    }
   }
 )
 

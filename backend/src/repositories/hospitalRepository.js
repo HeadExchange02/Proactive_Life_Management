@@ -1,4 +1,5 @@
 import { prisma } from '../config/prisma.js'
+import { logger } from '../config/logger.js'
 
 // Reads the "Hospitals_count_in_Bangladesh" table. It is not part of the Prisma
 // schema (columns contain spaces/dots), so it is queried with raw SQL.
@@ -32,7 +33,7 @@ export const hospitalRepository = {
         LIMIT ${limit}`
       return rows.map(mapRow)
     } catch (err) {
-      console.log('Hospital dataset lookup (district) failed:', err.message)
+      logger.warn({ err }, 'Hospital dataset lookup (district) failed')
       return []
     }
   },
@@ -57,7 +58,7 @@ export const hospitalRepository = {
         LIMIT 1`
       return rows[0] ? mapRow(rows[0]) : null
     } catch (err) {
-      console.log('Hospital dataset lookup (name) failed:', err.message)
+      logger.warn({ err }, 'Hospital dataset lookup (name) failed')
       return null
     }
   },
