@@ -1,6 +1,7 @@
 import { Plane, MapPin, Lightbulb } from 'lucide-react'
 import AIModuleForm from '../../components/dashboard/AIModuleForm'
 import BudgetOverviewCard from '../../components/dashboard/BudgetOverviewCard'
+import AttractionsCard from '../../components/dashboard/AttractionsCard'
 import { useAIRecommendation } from '../../hooks/useAIRecommendation'
 
 const fields = [
@@ -72,6 +73,10 @@ export default function TravelPage() {
         {result?.itinerary?.map((stop, i) => {
           if (stop.type === 'budget') {
             return <BudgetOverviewCard key={i} title={stop.name} data={stop.data} accentColor={ACCENT} />
+          }
+
+          if (stop.type === 'attractions') {
+            return <AttractionsCard key={i} title={stop.name} data={stop.data} accentColor={ACCENT} />
           }
 
           if (stop.type === 'preference') {

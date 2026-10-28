@@ -1,5 +1,6 @@
 import { prisma } from '../config/prisma.js'
 import { travelRepository } from '../repositories/travelRepository.js'
+import { touristAttractionRepository } from '../repositories/touristAttractionRepository.js'
 import { findBestMatch } from '../utils/fuzzyMatch.js'
 // FUTURE: import { aiService } from '../ai/aiService.js'
 
@@ -24,6 +25,11 @@ export const travelService = {
       include: { transportOptions: true, hotelOptions: true },
     })
     const packageData = findBestMatch(destination, allPackages, (p) => p.destination)
+
+    const attractions = await touristAttractionRepository.findByDestination(destination, preferences)
+    const attractionsItem = attractions.length
+      ? { type: 'attractions', name: `📍 Top attractions near ${destination}`, data: { places: attractions } }
+      : null
 
     let aiResult = null
 
@@ -78,6 +84,7 @@ export const travelService = {
             name: `🌿 Day 2: Nature & Adventure`,
             notes: `Visit the best nature and sightseeing areas: ${packageData.bestVisitingAreas.join(', ')}.`,
           },
+          ...(attractionsItem ? [attractionsItem] : []),
           {
             type: 'budget',
             name: `💰 Budget Overview`,
@@ -109,15 +116,26 @@ export const travelService = {
 
         aiResult = { itinerary }
       } else {
-        aiResult = {
-          itinerary: [
-            {
-              type: 'day',
-              name: `🔍 Searching for: ${destination}`,
-              notes: `We couldn't match "${destination}" with our 20 verified destinations. Your target budget was ৳${budgetNum.toLocaleString('en-BD')}. Once AI integration is live, you'll get a fully custom plan here regardless of location!`,
-            },
-          ],
-        }
+        aiResult = attractionsItem
+          ? {
+              itinerary: [
+                {
+                  type: 'day',
+                  name: `📍 Exploring ${destination}`,
+                  notes: `We don't have verified transport and hotel prices for "${destination}" yet, but here are its top-rated places to visit. Your target budget was ৳${budgetNum.toLocaleString('en-BD')}.`,
+                },
+                attractionsItem,
+              ],
+            }
+          : {
+              itinerary: [
+                {
+                  type: 'day',
+                  name: `🔍 Searching for: ${destination}`,
+                  notes: `We couldn't match "${destination}" with our 20 verified destinations. Your target budget was ৳${budgetNum.toLocaleString('en-BD')}. Once AI integration is live, you'll get a fully custom plan here regardless of location!`,
+                },
+              ],
+            }
       }
     }
 
