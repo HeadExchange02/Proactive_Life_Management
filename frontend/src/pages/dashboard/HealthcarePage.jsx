@@ -1,6 +1,9 @@
 import { Stethoscope, Plus, AlertCircle } from 'lucide-react'
 import AIModuleForm from '../../components/dashboard/AIModuleForm'
 import { useAIRecommendation } from '../../hooks/useAIRecommendation'
+import HospitalDetailsModal from '../../components/healthcare/HospitalDetailsModal'
+import { Modal, useOverlayState } from '@heroui/react'
+import { useState } from 'react'
 
 const fields = [
   { name: 'symptoms', label: 'Symptoms', type: 'textarea', required: true, span: 2 },
@@ -11,6 +14,8 @@ const ACCENT = '#1D8A7A' // clinical teal
 
 export default function HealthcarePage() {
   const { result, error, isLoading, requestRecommendation } = useAIRecommendation('healthcare')
+  const modal = useOverlayState()
+  const [selected, setSelected] = useState(null)
 
   return (
     <div>
@@ -67,7 +72,16 @@ export default function HealthcarePage() {
           </p>
         )}
         {result?.aiAnalysis?.hospitals?.map((h, idx) => (
-          <div key={idx} className="card p-5 mt-4 border-l-4" style={{ borderColor: ACCENT }}>
+          <button
+            type="button"
+            key={idx}
+            onClick={() => {
+              setSelected(h)
+              modal.open()
+            }}
+            className="card block w-full text-left p-5 mt-4 border-l-4 cursor-pointer hover:shadow-md transition-shadow"
+            style={{ borderColor: ACCENT }}
+          >
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="font-bold">{h.name}</h3>
               {h.curated && idx === 0 && (
@@ -81,8 +95,12 @@ export default function HealthcarePage() {
             </div>
             <p className="text-sm text-[var(--color-text-secondary)]">{h.address}</p>
             {h.note && <p className="text-xs mt-1 text-[var(--color-text-muted)]">{h.note}</p>}
-          </div>
+          </button>
         ))}
+
+        <Modal>
+          <HospitalDetailsModal hospital={selected} isOpen={modal.isOpen} onOpenChange={modal.setOpen} accentColor={ACCENT} />
+        </Modal>
 
         {/* Medicines Data Section with Dosages */}
         {result?.medicines?.length > 0 && (

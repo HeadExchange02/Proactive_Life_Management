@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "@heroui/styles";
 
 /*
   Design tokens ported 1:1 from the original vanilla-JS app's style.css
