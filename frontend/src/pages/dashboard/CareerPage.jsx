@@ -34,7 +34,7 @@ export default function CareerPage() {
           </p>
           <div className="inline-flex items-center gap-2 mt-5 px-3 py-1.5 rounded-full bg-white/10 text-white/80 text-xs font-medium">
             <TrendingUp size={14} className="text-[#D9A84E]" />
-            AI-matched roles, updated as you grow
+            System matched roles, updated as you grow
           </div>
         </div>
       </section>

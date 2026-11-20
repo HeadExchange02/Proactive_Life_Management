@@ -205,7 +205,7 @@ export default function TravelPage() {
             style={{ background: ACCENT }}
           >
             <Sparkles size={18} />
-            {isLoading ? 'Planning...' : 'Get AI Recommendations'}
+            {isLoading ? 'Planning...' : 'Get Recommendations'}
           </button>
         </form>
 
