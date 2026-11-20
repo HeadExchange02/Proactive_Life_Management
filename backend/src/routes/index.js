@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import authRoutes from './authRoutes.js'
-import careerRoutes from './careerRoutes.js'
 import travelRoutes from './travelRoutes.js'
 import healthcareRoutes from './healthcareRoutes.js'
 import agricultureRoutes from './agricultureRoutes.js'
@@ -22,7 +21,6 @@ const router = Router()
 
 router.use('/auth', authRoutes)
 router.use('/dashboard', dashboardRoutes)
-router.use('/career', careerRoutes)
 router.use('/travel', travelRoutes)
 router.use('/healthcare', healthcareRoutes)
 router.use('/agriculture', agricultureRoutes)

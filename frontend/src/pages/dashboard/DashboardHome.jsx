@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  Search, Loader2, Briefcase, Plane, Stethoscope, Wheat, Target, Wallet, Bot, Landmark,
+  Search, Loader2, Plane, Stethoscope, Wheat, Target, Wallet, Bot, Landmark,
 } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 import { dashboardService } from '../../services/dashboardService'
 import { getErrorMessage } from '../../utils/errors'
 import { moduleTiles } from '../../constants/content'
 
-const MODULE_ICONS = { Bot, Briefcase, Plane, Stethoscope, Wheat, Landmark }
+const MODULE_ICONS = { Bot, Plane, Stethoscope, Wheat, Landmark }
 
 export default function DashboardHome() {
   const { user } = useAuth()
@@ -34,7 +34,6 @@ export default function DashboardHome() {
 
   const stats = overview && [
     { label: 'Active Goals', value: overview.activeGoals, icon: Target },
-    { label: 'Career Matches', value: overview.careerMatches, icon: Briefcase },
     { label: 'Saved Trips', value: overview.savedTrips, icon: Plane },
     { label: 'Health Check-ins', value: overview.healthCheckIns, icon: Stethoscope },
     { label: 'Crop Plans', value: overview.cropPlans, icon: Wheat },

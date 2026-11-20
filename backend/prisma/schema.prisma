@@ -62,7 +62,6 @@ model User {
   tasks             Task[]
   budgets           Budget[]
   medicalRecords    MedicalRecord[]
-  careerProfiles    CareerProfile[]
   agricultureRecords AgricultureRecord[]
   travelPlans       TravelPlan[]
   chatMessages      ChatMessage[]
@@ -174,19 +173,6 @@ model MedicalRecord {
   createdAt   DateTime @default(now())
 
   @@map("medical_records")
-}
-
-model CareerProfile {
-  id                String   @id @default(uuid())
-  userId            String
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  education         String?
-  skills            String[]
-  interests         String?
-  aiRecommendations Json? // [{ title, description, matchedSkills, missingSkills }]
-  createdAt         DateTime @default(now())
-
-  @@map("career_profiles")
 }
 
 model AgricultureRecord {

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, Briefcase, Bot, Sprout } from 'lucide-react'
+import { ArrowRight, Bot, Sprout } from 'lucide-react'
 import { stats } from '../../constants/content'
 
 export default function Hero() {
@@ -11,7 +11,7 @@ export default function Hero() {
             Your Budget. Your Skills. Our Smart Logic.
           </h1>
           <p className="text-lg text-[var(--color-text-secondary)] mb-8 max-w-xl">
-            Get personalized recommendations for career, travel, healthcare, agriculture, and budget planning.
+            Get personalized recommendations for travel, healthcare, agriculture, and budget planning.
           </p>
           <div className="flex flex-wrap gap-4 mb-12">
             <Link
@@ -49,10 +49,6 @@ export default function Hero() {
               </p>
             </div>
             <div className="flex gap-4">
-              <div className="card p-5 w-40">
-                <Briefcase className="text-[var(--color-text-secondary)] mb-2" size={22} />
-                <h4 className="font-semibold text-sm">Career Match</h4>
-              </div>
               <div className="card p-5 w-40 mt-8">
                 <Sprout className="text-[var(--color-success)] mb-2" size={22} />
                 <h4 className="font-semibold text-sm">Crop Advisor</h4>

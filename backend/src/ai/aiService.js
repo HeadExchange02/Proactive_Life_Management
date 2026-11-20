@@ -48,7 +48,7 @@ export const aiService = {
 
   /**
    * Convenience helper for structured JSON recommendations. Instructs the
-   * model to return JSON only, then parses it — used by career/travel/
+   * model to return JSON only, then parses it — used by travel/
    * healthcare/agriculture/budget modules.
    */
   async completeJSON(system, prompt, providerName, model) {

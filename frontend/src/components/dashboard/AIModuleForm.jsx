@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form'
 import { Sparkles } from 'lucide-react'
 
 /**
- * Generic form renderer for AI-powered modules (Career, Travel, Healthcare,
+ * Generic form renderer for AI-powered modules (Travel, Healthcare,
  * Agriculture, Budget). Each module page passes its own `fields` config and
  * `onSubmit` handler, avoiding a duplicated form component per module.
  */

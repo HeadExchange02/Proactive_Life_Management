@@ -3,13 +3,6 @@
 
 export const services = [
   {
-    id: 'career',
-    title: 'Career',
-    description: 'Get personalized career recommendations based on your education, skills, and preferences.',
-    icon: '💼',
-    color: 'career',
-  },
-  {
     id: 'travel',
     title: 'Travel Planner',
     description: 'Plan your perfect trip with AI-powered recommendations for destinations, hotels, and transportation.',
@@ -59,7 +52,7 @@ export const testimonials = [
     role: 'Software Engineer, Dhaka',
     avatar: 'RA',
     rating: 5,
-    text: 'Active Life Assistant helped me find the perfect career path. The AI recommendations were spot-on and helped me land my dream job!',
+    text: 'Active Life Assistant helped me find the perfect path. The AI recommendations were spot-on and helped me land my dream job!',
   },
   {
     name: 'Fatima Begum',
@@ -105,7 +98,6 @@ export const faqs = [
 // menu dropdown (see navbarMenuItems below).
 export const navbarPrimaryItems = [
   { id: 'assistant', label: 'AI Assistant', path: '/dashboard/assistant', icon: 'Bot' },
-  { id: 'career', label: 'Career', path: '/dashboard/career', icon: 'Briefcase' },
   { id: 'travel', label: 'Travel', path: '/dashboard/travel', icon: 'Plane' },
   { id: 'healthcare', label: 'Healthcare', path: '/dashboard/healthcare', icon: 'Stethoscope' },
   { id: 'agriculture', label: 'Agriculture', path: '/dashboard/agriculture', icon: 'Wheat' },
@@ -126,7 +118,6 @@ export const navbarMenuItems = [
 // Module tiles shown on the home/overview page grid.
 export const moduleTiles = [
   { id: 'assistant', title: 'AI Assistant', description: 'Chat, get a success roadmap, and let Aida route you to the right tool.', path: '/dashboard/assistant', icon: 'Bot' },
-  { id: 'career', title: 'Career', description: 'Resume tools, ATS checks, interview practice, and job matching.', path: '/dashboard/career', icon: 'Briefcase' },
   { id: 'travel', title: 'Travel Planner', description: 'Routes, transport options, and trip planning across Bangladesh.', path: '/dashboard/travel', icon: 'Plane' },
   { id: 'healthcare', title: 'Healthcare', description: 'Symptom guidance, nearby hospitals, and emergency SOS.', path: '/dashboard/healthcare', icon: 'Stethoscope' },
   { id: 'agriculture', title: 'Agriculture', description: 'Crop recommendations, disease detection, and market prices.', path: '/dashboard/agriculture', icon: 'Wheat' },

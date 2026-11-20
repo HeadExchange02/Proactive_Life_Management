@@ -20,7 +20,7 @@ export default function AuthShowcasePanel() {
         </div>
         <h2 className="text-2xl font-black leading-snug mb-3">Your life guide for Bangladesh</h2>
         <p className="text-white/70 text-sm max-w-xs">
-          Career, travel, health, farming, and government services — planned with AI, built for
+          Travel, health, farming, and government services — planned with AI, built for
           everyday life here.
         </p>
       </div>

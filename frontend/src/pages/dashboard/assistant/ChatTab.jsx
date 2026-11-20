@@ -4,7 +4,6 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { assistantService } from '../../../services/assistantService'
 
 const MODULE_LABELS = {
-  career: 'Career',
   travel: 'Travel Planner',
   healthcare: 'Healthcare',
   agriculture: 'Agriculture',
@@ -18,7 +17,7 @@ export default function ChatTab() {
     {
       role: 'assistant',
       content:
-        "Hi! I'm Aida, your AI agent. Ask me anything about your career, travel, health, farming, or Bangladesh government services — I'll help directly or point you to the right tool.",
+        "Hi! I'm Aida, your AI agent. Ask me anything about your travel, health, farming, or Bangladesh government services — I'll help directly or point you to the right tool.",
     },
   ])
   const [input, setInput] = useState('')

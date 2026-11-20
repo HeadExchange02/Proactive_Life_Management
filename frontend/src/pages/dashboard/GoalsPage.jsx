@@ -124,7 +124,7 @@ export default function GoalsPage() {
             <div>
               <label className="text-sm font-medium block mb-1">Category</label>
               <input
-                placeholder="e.g. Career, Health"
+                placeholder="e.g. Health, Education"
                 className="w-full px-4 py-2.5 rounded-lg border border-[var(--color-border-default)]"
                 {...register('category')}
               />

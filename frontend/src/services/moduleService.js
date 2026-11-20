@@ -1,6 +1,6 @@
 import api from './api'
 
-// One generic service for all AI-recommendation modules (career, travel,
+// One generic service for all AI-recommendation modules (travel,
 // healthcare, agriculture, budget). Each hits its own backend route but
 // shares the same request/response shape, so no per-module service files
 // are needed.

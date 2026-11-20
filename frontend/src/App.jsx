@@ -15,7 +15,6 @@ import ResetPasswordPage from './pages/public/ResetPasswordPage'
 import VerifyEmailPage from './pages/public/VerifyEmailPage'
 
 import DashboardHome from './pages/dashboard/DashboardHome'
-import CareerPage from './pages/dashboard/CareerPage'
 import TravelPage from './pages/dashboard/TravelPage'
 import HealthcarePage from './pages/dashboard/HealthcarePage'
 import AgriculturePage from './pages/dashboard/AgriculturePage'
@@ -81,7 +80,6 @@ export default function App() {
             <Route path="memory" element={<MemoryTab />} />
           </Route>
 
-          <Route path="/dashboard/career" element={<CareerPage />} />
           <Route path="/dashboard/travel" element={<TravelPage />} />
           <Route path="/dashboard/healthcare" element={<HealthcarePage />} />
           <Route path="/dashboard/agriculture" element={<AgriculturePage />} />

@@ -12,7 +12,6 @@ import { ApiError } from '../utils/ApiError.js'
 // Maps a detected intent to the dashboard route the user should be routed to.
 // `general` has no specific module — the agent just keeps chatting.
 const MODULE_ROUTES = {
-  career: '/dashboard/career',
   travel: '/dashboard/travel',
   healthcare: '/dashboard/healthcare',
   agriculture: '/dashboard/agriculture',
@@ -21,19 +20,19 @@ const MODULE_ROUTES = {
 }
 
 const CHAT_SYSTEM_PROMPT = `You are Aida, the AI Agent inside Proactive Life Management — a life-management
-platform for people in Bangladesh covering career, travel, healthcare, agriculture, and Bangladesh
+platform for people in Bangladesh covering travel, healthcare, agriculture, and Bangladesh
 government/utility services. Reply helpfully and concisely to the user's message, using any known
 facts about them if relevant.
 
 Then:
-1. Classify the underlying need into exactly one intent: "career", "travel", "healthcare",
+1. Classify the underlying need into exactly one intent: "travel", "healthcare",
    "agriculture", "bd_service", or "general" (general = casual conversation or nothing module-specific).
 2. Extract any new durable facts worth remembering about the user (profession, location, goals,
    health conditions, family, preferences) as short key/value pairs. Only include genuinely new,
    useful, non-sensitive facts. Return an empty array if there is nothing new.
 
 Respond with ONLY JSON, no markdown fences:
-{ "reply": string, "intent": "career"|"travel"|"healthcare"|"agriculture"|"bd_service"|"general",
+{ "reply": string, "intent": "travel"|"healthcare"|"agriculture"|"bd_service"|"general",
   "memory": [ { "key": string, "value": string } ] }`
 
 export const assistantService = {

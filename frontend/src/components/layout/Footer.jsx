@@ -12,7 +12,7 @@ export default function Footer() {
             </span>
             <span className="text-lg font-bold text-white">Proactive Life</span>
           </div>
-          <p className="text-sm">AI-powered life management for career, travel, health, farming, and finance.</p>
+          <p className="text-sm">AI-powered life management for travel, health, farming, and finance.</p>
         </div>
 
         <div>

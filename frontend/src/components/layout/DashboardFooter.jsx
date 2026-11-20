@@ -24,7 +24,6 @@ export default function DashboardFooter() {
         <div>
           <h4 className="font-semibold text-[var(--color-text-primary)] mb-3">Resources</h4>
           <ul className="space-y-2 text-sm text-[var(--color-text-secondary)]">
-            <li><Link to="/dashboard/career" className="hover:text-[var(--color-primary)]">Career Advisor</Link></li>
             <li><Link to="/dashboard/agriculture" className="hover:text-[var(--color-primary)]">Agriculture Guide</Link></li>
             <li><Link to="/dashboard/bd-hub" className="hover:text-[var(--color-primary)]">Finance & Budget</Link></li>
           </ul>
