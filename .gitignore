@@ -4,7 +4,7 @@ backend/node_modules/
 frontend/node_modules/
 
 # Environment variables — সবচেয়ে গুরুত্বপূর্ণ, এখানে সব API key/secret থাকে
-.env
+
 .env.local
 .env.*.local
 backend/.env
