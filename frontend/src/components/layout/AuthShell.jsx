@@ -15,8 +15,8 @@ export default function AuthShell({ children }) {
         className="hidden lg:flex flex-col justify-between p-12 relative overflow-hidden"
         style={{ background: 'linear-gradient(135deg, #0B2E22 0%, #14503A 55%, #1F6F4F 100%)' }}
       >
-        <div className="absolute -right-24 -top-24 w-96 h-96 rounded-full bg-white/5" />
-        <div className="absolute -left-16 bottom-0 w-72 h-72 rounded-full bg-white/5" />
+        <div className="absolute -right-24 -top-24 w-96 h-96 rounded-full bg-white/5 animate-float-slow" />
+        <div style={{ '--i': 2 }} className="absolute -left-16 bottom-0 w-72 h-72 rounded-full bg-white/5 animate-float-slow" />
 
         <div className="relative flex items-center gap-2.5 font-bold text-white">
           <span className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center">PL</span>
@@ -32,8 +32,8 @@ export default function AuthShell({ children }) {
             one place.
           </p>
           <div className="space-y-4">
-            {HIGHLIGHTS.map((h) => (
-              <div key={h.text} className="flex items-center gap-3 text-white/85 text-sm">
+            {HIGHLIGHTS.map((h, i) => (
+              <div key={h.text} style={{ '--i': i + 1 }} className="animate-fade-up flex items-center gap-3 text-white/85 text-sm">
                 <span className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
                   <h.icon size={16} />
                 </span>
@@ -48,7 +48,7 @@ export default function AuthShell({ children }) {
 
       {/* Form area */}
       <div className="flex items-center justify-center px-6 py-16 bg-[var(--color-bg-main)]">
-        <div className="w-full max-w-sm">{children}</div>
+        <div className="animate-fade-up w-full max-w-sm">{children}</div>
       </div>
     </div>
   )

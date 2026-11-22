@@ -69,7 +69,48 @@
   h1, h2, h3 {
     font-family: var(--font-display);
   }
+  html {
+    scroll-behavior: smooth;
+  }
+  ::selection {
+    background: var(--color-primary-100);
+    color: var(--color-primary-dark);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-primary-light);
+    outline-offset: 2px;
+  }
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+    transition-duration: 200ms;
+    transition-timing-function: ease;
+  }
+  button:not(:disabled):active {
+    transform: scale(0.97);
+  }
 }
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes pop {
+  from { opacity: 0; transform: translateY(-6px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
 
 /* Dark mode: toggled by adding `class="dark"` on <html> (see ThemeContext) */
 @custom-variant dark (&:where(.dark, .dark *));
@@ -92,5 +133,67 @@
   }
   .glow {
     box-shadow: var(--shadow-glow);
+  }
+
+  /* Entrance animations. `backwards` fill (never `forwards`) so no transform
+     stays on the element afterwards and fixed-position children keep working. */
+  .animate-page-in {
+    animation: fade-in 250ms ease-out backwards;
+  }
+  .animate-fade-up {
+    animation: fade-up 650ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation-delay: calc(var(--i, 0) * 90ms);
+  }
+  .animate-fade-in {
+    animation: fade-in 300ms ease-out backwards;
+  }
+  .animate-pop {
+    animation: pop 180ms ease-out backwards;
+    transform-origin: top right;
+  }
+  .animate-float {
+    animation: float 8s ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * -1.5s);
+  }
+  .animate-float-slow {
+    animation: float 11s ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * -3s);
+  }
+
+  /* Scroll reveal (see components/common/Reveal.jsx) */
+  .reveal-hidden {
+    opacity: 0;
+  }
+  .reveal-show {
+    animation: fade-up 700ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  }
+
+  .card-hover {
+    transition: transform 300ms ease, box-shadow 300ms ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-glow), var(--shadow-card);
+  }
+
+  .text-gradient {
+    background-image: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal-hidden {
+    opacity: 1;
   }
 }

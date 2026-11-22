@@ -5,9 +5,11 @@ import { Menu, X, LogOut, ShieldCheck } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 import { navbarPrimaryItems, navbarMenuItems } from '../../constants/content'
 import ModelSelector from '../ModelSelector'
+import { useScrolled } from '../../hooks/useScrolled'
 
 export default function Navbar() {
   const { user, logout } = useAuth()
+  const scrolled = useScrolled()
   const navigate = useNavigate()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -18,12 +20,16 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="sticky top-0 z-40 w-full border-b border-[var(--color-border-light)] bg-[var(--color-bg-card)]/90 backdrop-blur-xl">
+    <nav
+      className={`sticky top-0 z-40 w-full border-b border-[var(--color-border-light)] bg-[var(--color-bg-card)]/90 backdrop-blur-xl transition-shadow duration-300 ${
+        scrolled ? 'shadow-md' : ''
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex h-16 items-center justify-between gap-4">
           {/* Logo */}
-          <Link to="/dashboard" className="flex items-center gap-2.5 font-bold shrink-0">
-            <span className="w-9 h-9 rounded-xl bg-[var(--color-primary)] text-white flex items-center justify-center font-bold shadow-sm">
+          <Link to="/dashboard" className="group flex items-center gap-2.5 font-bold shrink-0">
+            <span className="w-9 h-9 rounded-xl bg-[var(--color-primary)] text-white flex items-center justify-center font-bold shadow-sm transition-transform duration-300 group-hover:rotate-6 group-hover:scale-105">
               PL
             </span>
             <span className="hidden sm:inline text-[var(--color-text-primary)]">Proactive Life</span>
@@ -66,7 +72,7 @@ export default function Navbar() {
             {menuOpen && (
               <>
                 <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
-                <div className="absolute right-0 top-12 w-64 rounded-2xl border border-[var(--color-border-light)] bg-[var(--color-bg-card)] shadow-xl z-50 py-2 overflow-hidden">
+                <div className="animate-pop absolute right-0 top-12 w-64 rounded-2xl border border-[var(--color-border-light)] bg-[var(--color-bg-card)] shadow-xl z-50 py-2 overflow-hidden">
                   <div className="px-4 py-3 border-b border-[var(--color-border-light)]">
                     <p className="text-sm font-semibold text-[var(--color-text-primary)]">{user?.name}</p>
                     <p className="text-xs text-[var(--color-text-muted)]">{user?.email}</p>
@@ -126,7 +132,7 @@ export default function Navbar() {
 
         {/* Mobile nav */}
         {mobileOpen && (
-          <div className="lg:hidden pb-4 space-y-1 border-t border-[var(--color-border-light)] pt-3">
+          <div className="animate-fade-in lg:hidden pb-4 space-y-1 border-t border-[var(--color-border-light)] pt-3">
             {navbarPrimaryItems.map((item) => (
               <NavLink
                 key={item.id}

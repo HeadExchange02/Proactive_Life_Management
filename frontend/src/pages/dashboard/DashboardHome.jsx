@@ -7,6 +7,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import { dashboardService } from '../../services/dashboardService'
 import { getErrorMessage } from '../../utils/errors'
 import { moduleTiles } from '../../constants/content'
+import Reveal from '../../components/common/Reveal'
 
 const MODULE_ICONS = { Bot, Plane, Stethoscope, Wheat, Landmark }
 
@@ -47,21 +48,28 @@ export default function DashboardHome() {
   return (
     <div>
       {/* Hero */}
-      <section className="px-4 sm:px-6 py-16 md:py-20 text-center bg-[var(--color-bg-secondary)]/50 border-b border-[var(--color-border-light)]">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-black text-[var(--color-primary)] leading-tight mb-3">
+      <section className="relative overflow-hidden px-4 sm:px-6 py-16 md:py-20 text-center bg-[var(--color-bg-secondary)]/50 border-b border-[var(--color-border-light)]">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-24 left-1/2 h-72 w-[36rem] -translate-x-1/2 rounded-full bg-[var(--color-primary)]/10 blur-3xl animate-float-slow"
+        />
+        <div className="relative max-w-3xl mx-auto">
+          <h1
+            style={{ '--i': 0 }}
+            className="animate-fade-up text-4xl md:text-5xl font-black text-[var(--color-primary)] leading-tight mb-3"
+          >
             Your Life Guide for Bangladesh
           </h1>
-          <p className="text-lg text-[var(--color-text-secondary)] mb-1">
+          <p style={{ '--i': 1 }} className="animate-fade-up text-lg text-[var(--color-text-secondary)] mb-1">
             {user?.name ? `Welcome back, ${user.name.split(' ')[0]}.` : 'Welcome back.'}
           </p>
-          <p className="text-[var(--color-text-secondary)] mb-8">
+          <p style={{ '--i': 2 }} className="animate-fade-up text-[var(--color-text-secondary)] mb-8">
             From finding the right hospital to planning your journey, we help you navigate every
             aspect of life in Bangladesh.
           </p>
 
-          <form onSubmit={handleSearch} className="max-w-xl mx-auto">
-            <div className="flex items-center gap-2 bg-[var(--color-bg-card)] border border-[var(--color-border-default)] rounded-full shadow-sm p-1.5">
+          <form onSubmit={handleSearch} style={{ '--i': 3 }} className="animate-fade-up max-w-xl mx-auto">
+            <div className="flex items-center gap-2 bg-[var(--color-bg-card)] border border-[var(--color-border-default)] rounded-full shadow-sm p-1.5 transition-shadow duration-300 focus-within:shadow-[var(--shadow-glow)] focus-within:border-[var(--color-primary)]">
               <Search size={18} className="ml-3 text-[var(--color-text-muted)] shrink-0" />
               <input
                 value={query}
@@ -95,9 +103,9 @@ export default function DashboardHome() {
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
-            {stats?.map((s) => (
-              <div key={s.label} className="card p-5 flex items-center gap-4">
-                <div className="w-11 h-11 rounded-xl bg-[var(--color-primary-100)] text-[var(--color-primary)] flex items-center justify-center shrink-0">
+            {stats?.map((s, i) => (
+              <div key={s.label} style={{ '--i': i }} className="group animate-fade-up card card-hover p-5 flex items-center gap-4">
+                <div className="w-11 h-11 rounded-xl bg-[var(--color-primary-100)] text-[var(--color-primary)] flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
                   <s.icon size={20} />
                 </div>
                 <div>
@@ -112,20 +120,22 @@ export default function DashboardHome() {
         {/* Module grid */}
         <h2 className="text-xl font-bold text-[var(--color-text-primary)] mb-4">Everything You Need</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {moduleTiles.map((m) => {
+          {moduleTiles.map((m, i) => {
             const Icon = MODULE_ICONS[m.icon] || Bot
             return (
-              <button
+              <Reveal
+                as="button"
                 key={m.id}
+                delay={(i % 3) * 90}
                 onClick={() => navigate(m.path)}
-                className="card p-6 text-left hover:shadow-[var(--shadow-glow)] hover:-translate-y-0.5 transition-all duration-300"
+                className="group card card-hover p-6 text-left"
               >
-                <div className="w-12 h-12 rounded-2xl bg-[var(--color-primary-100)] text-[var(--color-primary)] flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-2xl bg-[var(--color-primary-100)] text-[var(--color-primary)] flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6">
                   <Icon size={22} />
                 </div>
                 <h3 className="font-bold text-[var(--color-text-primary)] mb-1.5">{m.title}</h3>
                 <p className="text-sm text-[var(--color-text-secondary)]">{m.description}</p>
-              </button>
+              </Reveal>
             )
           })}
         </div>

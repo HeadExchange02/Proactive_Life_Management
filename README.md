@@ -1,6 +1,6 @@
 # Proactive Life Management
 
-A personal productivity and life-management web application that pairs a React + Vite frontend with a Node.js + Prisma backend and an AI layer supporting multiple LLM providers (OpenAI, Gemini, Mistral, Claude, Groq). The app provides planning, recommendations, authentication (email/Google), and seedable sample data for quick local setup.
+A personal life-management web application for Bangladesh. It pairs a React + Vite frontend with a Node.js + Prisma backend and an AI layer that supports multiple LLM providers (OpenAI, Gemini, Mistral, Claude, Groq). Users get AI-guided help with travel, healthcare, agriculture, budgeting, goals, habits and more, with email or Google sign-in.
 
 > Full-stack app intended for developers and early testers who want a self-hostable, AI-enhanced personal planner.
 
@@ -10,120 +10,137 @@ Table of contents
 - Architecture
 - Quick start (local development)
 - Environment variables
+- Google Sign-In setup
 - Database (Prisma)
 - AI providers
+- Frontend UI notes
 - Running tests
 - Deployment
 - Contributing
 - Questions for maintainers
 
 ## Features
-- React + Vite single-page frontend
-- Node.js backend (Express-style) with structured controllers/services/repositories
-- Prisma ORM with migrations and seed scripts (example travel package seed included)
-- Multiple AI provider adapters: OpenAI, Gemini, Mistral, Claude, Groq
-- Authentication: email/password + JWTs and Google OAuth hooks
-- Email-support for verification / password reset (SMTP or console in dev)
-- Rate-limiting, helmet security headers, and structured logging with pino
+- **AI Assistant hub** — chat, career roadmap, resume, interview practice, skill-gap analysis, learning plan and assistant memory
+- **Travel, Healthcare and Agriculture** modules with AI recommendations (travel package and agriculture seed data included)
+- **Bangladesh Service Hub** — finance/budget, government services, utility bills and emergency contacts
+- **Planning tools** — goals, habits, planner, reports and notifications
+- **Authentication** — email/password with JWT (access + refresh cookie), email verification, password reset, and **Sign in with Google**
+- **Admin panel** for administrators
+- Light/dark theme, plus subtle animations and hover effects (respects the OS "reduce motion" setting)
+- Rate limiting, Helmet security headers and structured logging with pino
 
 ## Tech stack
-- Language: JavaScript (primary), small TypeScript usage in Prisma seed
-- Frontend: React + Vite
-- Backend: Node.js (ES modules) + Express-compatible handlers
-- Database: PostgreSQL (works with Supabase connection string)
+- Language: JavaScript (JSX on the frontend), small TypeScript usage in the Prisma seed
+- Frontend: React 19, Vite, Tailwind CSS v4, HeroUI styles, react-router-dom, react-hook-form, zustand, axios, lucide-react
+- Backend: Node.js (ES modules) + Express
+- Database: PostgreSQL (works with a Supabase connection string)
 - ORM: Prisma
-- Notable libs: @prisma/client, express, dotenv, pino, axios (frontend), react-router-dom, zustand
+- Auth: JWT + `google-auth-library` for Google ID-token verification
 
 ## Architecture
-Top-level layout (high-level):
+Top-level layout:
 
 ```
-frontend/     React + Vite (src/, pages/, components/)
-backend/      Node API (src/) with ai/ (provider adapters), controllers, routes, services, repositories
-  prisma/     Prisma schema, migrations, and seed scripts
+frontend/     React + Vite
+  src/
+    pages/        public/ (landing, auth) and dashboard/ (modules, assistant/, bd-hub/)
+    components/   landing/, layout/, dashboard/, common/ (Reveal, CountUp, GoogleSignInButton)
+    contexts/     Auth, Theme, AI provider
+    hooks/        useInView, useScrolled, useAIRecommendation
+    services/     axios API clients
+backend/      Node API
+  src/            routes → controllers → services → repositories, ai/ (provider adapters)
+  prisma/         schema, migrations and seed scripts
 ```
 
 Runtime shape:
-- Frontend calls backend REST endpoints under /api (dev proxy configured in frontend/vite.config.js).
+- The frontend calls backend REST endpoints under `/api` (`baseURL: '/api'` in `frontend/src/services/api.js`; the dev proxy in `frontend/vite.config.js` forwards it to `http://localhost:4000`).
 - Backend routes → controllers → services → repositories. Repositories persist via Prisma to PostgreSQL.
-- The backend aiService orchestrates requests to AI providers using provider adapters in backend/src/ai/providers.
+- `aiService` orchestrates requests to AI providers through the adapters in `backend/src/ai/providers`.
 
 ## Quick start (local development)
 Prerequisites
 - Node.js 18+ (or current LTS)
-- PostgreSQL (local or hosted). You can use a Supabase database and paste its connection string into BACKEND .env.
-- (Optional) API keys for AI providers you want to test (OpenAI, Anthropic, Gemini, etc.)
+- PostgreSQL (local or hosted). You can use a Supabase database and paste its connection string into `backend/.env`.
+- (Optional) API keys for the AI providers you want to test
 
 Clone and install
 ```bash
 git clone https://github.com/HeadExchange02/Proactive_Life_Management.git
 cd Proactive_Life_Management
-# Install root + workspace packages
 npm run install:all
 ```
 
 Configure env files
-- Copy backend/.env.example → backend/.env and set DATABASE_URL and any secrets (JWT, SMTP, Google OAuth, AI keys).
-- Copy frontend/.env.example → frontend/.env and set VITE_GOOGLE_CLIENT_ID and VITE_API_URL if deploying.
+- Copy `backend/.env.example` → `backend/.env` and set `DATABASE_URL` and secrets (JWT, SMTP, Google OAuth, AI keys).
+- Copy `frontend/.env.example` → `frontend/.env` and set `VITE_GOOGLE_CLIENT_ID` to enable Google Sign-In.
 
 Database (Prisma)
 ```bash
-# from repo root
-# run migrations and generate Prisma client
 npm --prefix backend run prisma:generate
-npm --prefix backend run prisma:migrate   # runs `prisma migrate dev` (creates local dev migration)
-# seed the DB (Prisma seed configured in backend/package.json)
-cd backend
-npx prisma db seed
-cd ..
+npm --prefix backend run prisma:migrate   # prisma migrate dev
+cd backend && npx prisma db seed && cd ..
 ```
 
 Start in development
 ```bash
-# from repo root: runs frontend and backend concurrently
+# from repo root: runs backend and frontend together
 npm run dev
-# or start backend and frontend separately
-npm --prefix backend run dev   # backend: node --watch src/server.js
-npm --prefix frontend run dev  # frontend: vite
+# or separately
+npm --prefix backend run dev    # node --watch src/server.js  (http://localhost:4000)
+npm --prefix frontend run dev   # vite                         (http://localhost:5173)
 ```
 
-The frontend dev server (Vite) proxies /api to the backend during development — see frontend/vite.config.js.
+## Environment variables
+See `backend/.env.example` and `frontend/.env.example` for full examples.
 
-## Environment variables (high level)
-See backend/.env.example and frontend/.env.example for full examples. Key ones:
+Backend (`backend/.env`)
+- `NODE_ENV`, `PORT` (default 4000), `CLIENT_URL` (default http://localhost:5173)
+- `DATABASE_URL`
+- `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET` (generate strong random values, e.g. `openssl rand -hex 32`), `JWT_ACCESS_EXPIRY`, `JWT_REFRESH_EXPIRY`
+- `GOOGLE_CLIENT_ID` (required for Google Sign-In; `GOOGLE_CLIENT_SECRET` is loaded but not needed by the ID-token flow)
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` (leave blank in dev to log emails to the console)
+- `AI_PROVIDER` (`openai` | `claude` | `gemini` | `groq` | `mistral`; defaults to `gemini` if unset)
+- `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `GROQ_API_KEY`, `MISTRAL_API_KEY` (only the key for the chosen provider is required)
 
-Backend (backend/.env)
-- NODE_ENV=development
-- PORT=4000
-- CLIENT_URL=http://localhost:5173
-- DATABASE_URL="postgresql://user:password@localhost:5432/pce_dev"
-- JWT_ACCESS_SECRET, JWT_REFRESH_SECRET (generate strong random secrets)
-- GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET (for Google OAuth)
-- SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM (SMTP for emails; leave blank to log emails in dev)
-- AI_PROVIDER (openai | claude | gemini | mistral | groq)
-- OPENAI_API_KEY, ANTHROPIC_API_KEY, GEMINI_API_KEY (keys for chosen providers)
+Frontend (`frontend/.env`)
+- `VITE_GOOGLE_CLIENT_ID` — same Google client ID as the backend. If empty, the Google button is hidden and email login still works.
+- `VITE_API_URL` is listed in the example file but the current code uses the fixed `/api` base URL. For a production setup where the frontend and backend are on different domains, update `baseURL` in `frontend/src/services/api.js` (and the `/api/auth/refresh` call there) to use it.
 
-Frontend (frontend/.env)
-- VITE_API_URL=http://localhost:4000/api  # set to deployed backend URL in production
-- VITE_GOOGLE_CLIENT_ID=
+> Never commit real secrets. Keep `.env` files out of git and rotate any key that has been committed.
 
-## AI Provider configuration
-- The backend supports multiple provider adapters in backend/src/ai/providers/. Configure which provider to use by setting AI_PROVIDER in backend/.env (e.g., AI_PROVIDER=openai).
-- Only the key for the selected provider is required; the repo contains adapters for OpenAI, Anthropic/Claude, Google Gemini, Mistral, and Groq.
+## Google Sign-In setup
+1. In [Google Cloud Console](https://console.cloud.google.com/apis/credentials) create an **OAuth client ID** of type *Web application*.
+2. Add your frontend URLs under **Authorized JavaScript origins** (for local dev: `http://localhost:5173`, plus your production domain).
+3. Set the client ID in both places:
+   - `backend/.env` → `GOOGLE_CLIENT_ID=...`
+   - `frontend/.env` → `VITE_GOOGLE_CLIENT_ID=...`
+4. Restart both dev servers.
+
+How it works: the frontend loads Google's official script and renders the button on the Login and Signup pages. Google returns an ID token, which is sent to `POST /api/auth/google`. The backend verifies it, requires a verified Google email, then creates the user or links the Google account to an existing user with the same email, and issues the usual JWT session.
+
+## AI providers
+- Adapters live in `backend/src/ai/providers/` (OpenAI, Claude, Gemini, Groq, Mistral, plus an extra provider adapter).
+- Choose the default with `AI_PROVIDER` in `backend/.env`; only that provider's API key is required.
+
+## Frontend UI notes
+- Design tokens (colors, radii, shadows, fonts) are defined in `frontend/src/styles/index.css`; dark mode is toggled with a `dark` class on `<html>`.
+- Animations are CSS-first with no extra dependency: page fade-in, entrance stagger (`animate-fade-up`), scroll reveal (`components/common/Reveal.jsx`), number count-up (`CountUp.jsx`), hover lift (`card-hover`) and floating shapes.
+- All motion is disabled automatically when the user has `prefers-reduced-motion` enabled.
 
 ## Running tests
-There are no automated tests configured in package.json at the moment. See TESTING.md for notes.
+There are no automated tests configured at the moment. See `TESTING.md` for notes. For frontend checks you can run `npm --prefix frontend run lint` and `npm --prefix frontend run build`.
 
 ## Deployment
-See DEPLOYMENT.md in the repo root for platform-specific deployment guidance. Common steps:
-- Build and serve the frontend using Vite build output (or host as static site)
-- Run the backend on a hosted Node environment, set env vars, run Prisma migrations, and restore seed data as needed
-- Ensure AI provider keys and SMTP credentials are set in production secrets
+See `DEPLOYMENT.md` in the repo root for platform-specific guidance. Common steps:
+- Build the frontend (`npm --prefix frontend run build`) and serve the output as a static site
+- Run the backend on a hosted Node environment, set env vars, and run Prisma migrations
+- Set AI provider keys, SMTP credentials and the Google client ID in production secrets, and add the production domain to the Google OAuth authorized origins
 
 ## Development notes
-- Logging: backend uses pino + pino-http. In development pino-pretty can be used for pretty output.
-- Emails: when SMTP_* vars are blank in development, emails are logged to the console.
-- Security: helmet and express-rate-limit are applied; ensure secrets are long and safe in production.
+- Logging: the backend uses pino + pino-http.
+- Emails: when `SMTP_*` is blank in development, emails are logged to the console.
+- Security: Helmet and express-rate-limit are applied; keep secrets long and private in production.
 
 ## Contributing
 Contributions are welcome. Typical flow:
@@ -132,13 +149,10 @@ Contributions are welcome. Typical flow:
 3. Run the app and add tests where appropriate
 4. Open a PR describing the change
 
-## Questions for the maintainers
-I created this initial README from code and example env files. To finish and tailor a "perfect" README, please answer these:
-1. What is the short project tagline (1 sentence) and public-facing description you want at the top?
-2. Which license should be added (MIT, Apache-2.0, GPL, or a custom license)?
-3. Who should be credited as the author / maintainer (name and email or contact link)?
-4. Which AI provider should we recommend as the default in README examples (openai is in .env.example)?
-5. Do you want a screenshot, app logo, or demo link included in the README? If yes, please provide images or a URL.
-6. Would you like CI (GitHub Actions) or Docker instructions added to the README? If so, provide any constraints (registry, base images).
-
----
+## Questions for maintainers
+Still open, to finish the README:
+1. A short project tagline and public-facing description?
+2. Which license should be added (MIT, Apache-2.0, GPL, or custom)?
+3. Who should be credited as the author / maintainer?
+4. Do you want screenshots, a logo or a demo link?
+5. Would you like CI (GitHub Actions) or Docker instructions added?

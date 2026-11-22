@@ -1,5 +1,6 @@
 import { Link, NavLink } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
+import { useScrolled } from '../../hooks/useScrolled'
 
 const navLinks = [
   { label: 'Home', path: '/' },
@@ -10,12 +11,17 @@ const navLinks = [
 
 export default function Header() {
   const { isAuthenticated } = useAuth()
+  const scrolled = useScrolled()
 
   return (
-    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-[var(--color-border-light)]">
+    <header
+      className={`sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-[var(--color-border-light)] transition-shadow duration-300 ${
+        scrolled ? 'shadow-md' : ''
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-3">
-          <span className="w-10 h-10 rounded-xl bg-[var(--color-primary)] text-white font-bold flex items-center justify-center">
+        <Link to="/" className="group flex items-center gap-3">
+          <span className="w-10 h-10 rounded-xl bg-[var(--color-primary)] text-white font-bold flex items-center justify-center transition-transform duration-300 group-hover:rotate-6 group-hover:scale-105">
             S
           </span>
           <span className="text-xl font-bold text-[var(--color-text-primary)]">Proactive Life</span>
@@ -51,7 +57,7 @@ export default function Header() {
               </Link>
               <Link
                 to="/signup"
-                className="px-5 py-2.5 rounded-full bg-[var(--color-primary)] text-white text-sm font-semibold hover:bg-[var(--color-primary-dark)] transition"
+                className="px-5 py-2.5 rounded-full bg-[var(--color-primary)] text-white text-sm font-semibold hover:bg-[var(--color-primary-dark)] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[var(--color-primary)]/25 transition"
               >
                 Sign Up
               </Link>
