@@ -66,7 +66,7 @@ export const authService = {
   async loginWithGoogle(idToken) {
     const ticket = await googleClient.verifyIdToken({ idToken, audience: env.googleClientId })
     const payload = ticket.getPayload()
-    if (!payload?.email) throw new ApiError(401, 'Invalid Google token')
+    if (!payload?.email || !payload.email_verified) throw new ApiError(401, 'Invalid Google token')
 
     let user = await userRepository.findByGoogleId(payload.sub)
     if (!user) {

@@ -4,20 +4,35 @@ import { useState } from 'react'
 import { Mail, Lock } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 import AuthShell from '../../components/layout/AuthShell'
+import GoogleSignInButton from '../../components/common/GoogleSignInButton'
 
 export default function LoginPage() {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm()
-  const { login } = useAuth()
+  const { login, loginWithGoogle } = useAuth()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const [serverError, setServerError] = useState('')
+
+  const goNext = () => {
+    const next = searchParams.get('next')
+    navigate(next && next.startsWith('/') ? next : '/dashboard')
+  }
+
+  const onGoogle = async (idToken) => {
+    setServerError('')
+    try {
+      await loginWithGoogle(idToken)
+      goNext()
+    } catch (err) {
+      setServerError(err.response?.data?.message || 'Google sign-in failed. Please try again.')
+    }
+  }
 
   const onSubmit = async (values) => {
     setServerError('')
     try {
       await login(values)
-      const next = searchParams.get('next')
-      navigate(next && next.startsWith('/') ? next : '/dashboard')
+      goNext()
     } catch (err) {
       setServerError(err.response?.data?.message || 'Login failed. Please try again.')
     }
@@ -33,6 +48,8 @@ export default function LoginPage() {
           {serverError}
         </p>
       )}
+
+      <GoogleSignInButton onCredential={onGoogle} onError={setServerError} text="signin_with" />
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>

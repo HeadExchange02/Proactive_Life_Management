@@ -1,15 +1,27 @@
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { User, Mail, Lock, MailCheck } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 import AuthShell from '../../components/layout/AuthShell'
+import GoogleSignInButton from '../../components/common/GoogleSignInButton'
 
 export default function SignupPage() {
   const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm()
-  const { signup } = useAuth()
+  const { signup, loginWithGoogle } = useAuth()
+  const navigate = useNavigate()
   const [serverError, setServerError] = useState('')
   const [done, setDone] = useState(false)
+
+  const onGoogle = async (idToken) => {
+    setServerError('')
+    try {
+      await loginWithGoogle(idToken)
+      navigate('/dashboard')
+    } catch (err) {
+      setServerError(err.response?.data?.message || 'Google sign-up failed. Please try again.')
+    }
+  }
 
   const onSubmit = async (values) => {
     setServerError('')
@@ -48,6 +60,8 @@ export default function SignupPage() {
           {serverError}
         </p>
       )}
+
+      <GoogleSignInButton onCredential={onGoogle} onError={setServerError} text="signup_with" />
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
